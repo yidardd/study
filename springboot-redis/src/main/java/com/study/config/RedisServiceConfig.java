@@ -1,6 +1,9 @@
 package com.study.config;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.listener.RddMessageListener;
 import com.study.listener.RedisMessageListener;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +21,9 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scripting.support.ResourceScriptSource;
 
 @Configuration
@@ -63,28 +69,55 @@ public class RedisServiceConfig {
         connectionFactory.setDatabase(redisDb);
         connectionFactory.setPassword(redisPass);
 
-        //配置连接池属性
-        connectionFactory.setTimeout(Integer.parseInt(timeout));
-        connectionFactory.getPoolConfig().setMaxIdle(maxIdle);
-        connectionFactory.getPoolConfig().setMaxTotal(maxTotal);
-        connectionFactory.getPoolConfig().setMaxWaitMillis(maxWaitMillis);
-        connectionFactory.getPoolConfig().setMinEvictableIdleTimeMillis(
-                Integer.parseInt(minEvictableIdleTimeMillis));
-        connectionFactory.getPoolConfig()
-                .setNumTestsPerEvictionRun(numTestsPerEvictionRun);
-        connectionFactory.getPoolConfig().setTimeBetweenEvictionRunsMillis(
-                Integer.parseInt(timeBetweenEvictionRunsMillis));
-        connectionFactory.getPoolConfig().setTestOnBorrow(testOnBorrow);
-        connectionFactory.getPoolConfig().setTestWhileIdle(testWhileIdle);
+//        //配置连接池属性
+//        connectionFactory.setTimeout(Integer.parseInt(timeout));
+//        connectionFactory.getPoolConfig().setMaxIdle(maxIdle);
+//        connectionFactory.getPoolConfig().setMaxTotal(maxTotal);
+//        connectionFactory.getPoolConfig().setMaxWaitMillis(maxWaitMillis);
+//        connectionFactory.getPoolConfig().setMinEvictableIdleTimeMillis(
+//                Integer.parseInt(minEvictableIdleTimeMillis));
+//        connectionFactory.getPoolConfig()
+//                .setNumTestsPerEvictionRun(numTestsPerEvictionRun);
+//        connectionFactory.getPoolConfig().setTimeBetweenEvictionRunsMillis(
+//                Integer.parseInt(timeBetweenEvictionRunsMillis));
+//        connectionFactory.getPoolConfig().setTestOnBorrow(testOnBorrow);
+//        connectionFactory.getPoolConfig().setTestWhileIdle(testWhileIdle);
 
         return connectionFactory;
     }
 
     @Bean
-    public RedisTemplate taskRedisTemplate() {
-        RedisTemplate template = new StringRedisTemplate();
-        template.setConnectionFactory(taskConnectionFactory());
-        return template;
+    public RedisTemplate<Object, Object> taskRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate redisTemplate = new RedisTemplate();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+//
+//        // 使用Jackson2JsonRedisSerialize 替换默认序列化
+//        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+//        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+//        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+//
+//        // 设置value的序列化规则和 key的序列化规则
+//        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+//        redisTemplate.setKeySerializer(new StringRedisSerializer());
+//
+//        redisTemplate.setHashKeySerializer(jackson2JsonRedisSerializer);
+//        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+//
+//        redisTemplate.setDefaultSerializer(jackson2JsonRedisSerializer);
+//        redisTemplate.setEnableDefaultSerializer(true);
+//        redisTemplate.afterPropertiesSet();
+
+        RedisSerializer stringSerializer = new StringRedisSerializer();//序列化为String
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);//序列化为Json
+        redisTemplate.setKeySerializer(stringSerializer);
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashKeySerializer(stringSerializer);
+        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+
+        return redisTemplate;
     }
 
     @Bean
@@ -123,16 +156,6 @@ public class RedisServiceConfig {
     public StringRedisTemplate rddRedisTemplate() {
         StringRedisTemplate template = new StringRedisTemplate();
         template.setConnectionFactory(rddConnectionFactory());
-
-//        RedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
-//        RedisSerializer stringRedisSerializer = new StringRedisSerializer();
-//        // key 的序列化采用 StringRedisSerializer
-//        template.setKeySerializer(stringRedisSerializer);
-//        template.setHashKeySerializer(stringRedisSerializer);
-//        // value 值的序列化采用 GenericJackson2JsonRedisSerializer
-//        template.setValueSerializer(genericJackson2JsonRedisSerializer);
-//        template.setHashValueSerializer(genericJackson2JsonRedisSerializer);
-
         return template;
     }
 
@@ -161,5 +184,16 @@ public class RedisServiceConfig {
         listenerContainer.addMessageListener(rddListener, new PatternTopic("__keyevent@" + redisDb + "__:expired"));
         return listenerContainer;
     }
+
+    @Bean
+    public RedisSerializer fastJson2JsonRedisSerializer() {
+        return new FastJson2JsonRedisSerializer<>(Object.class);
+    }
+
+    @Bean
+    public RedisSerializer<String> stringSerializer() {
+        return new StringRedisSerializer();
+    }
+
 
 }

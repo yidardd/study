@@ -30,6 +30,9 @@ public class RedisLockScriptUtil {
 
 
     public String tryLock(String lockKey) {
+
+
+
         String lockValue = UUID.randomUUID().toString();
         Long endTime = System.currentTimeMillis() + acquireTimeout;
         while (System.currentTimeMillis() < endTime) {
