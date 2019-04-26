@@ -1,6 +1,8 @@
 package com.test;
 
-import java.time.LocalDateTime;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpUtil;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -11,19 +13,15 @@ import java.util.concurrent.Future;
 public class MainTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        System.out.println("开始执行-----");
-        Future<String> future = Executors.newCachedThreadPool().submit(() -> {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("执行完毕----");
-            return "success";
-        });
-        System.out.println("-----异步  " + LocalDateTime.now());
-        String s = future.get();
-        System.out.println("----同步   " + LocalDateTime.now());
-        System.out.println("返回结果: "+s);
+
+            System.out.println("开始执行-----");
+            Future<String> future = Executors.newCachedThreadPool().submit(() -> {
+                HttpRequest get = HttpUtil.createGet("http://192.168.110.47:8082/single-h5/consult/getGraphCode");
+                HttpResponse execute = get.execute();
+
+                System.out.println("执行完毕----");
+                return "success";
+            });
     }
 }
+    
