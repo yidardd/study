@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Created by 东东 on 2019/4/1.
+ * Created by stack on 2019/4/1.
  */
 public class Demo {
 

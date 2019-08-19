@@ -49,6 +49,8 @@
     <modules>
         <module>springboot-redis</module>
         <module>thread</module>
+        <module>swagger-generate</module>
+        <module>nettydemo</module>
     </modules>
 
     <dependencies>
@@ -171,14 +173,11 @@
             <version>4.5.4</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/net.sf.saxon/saxon9-dom -->
         <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon9-dom</artifactId>
-            <version>9.1.0.8</version>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.6.Final</version>
         </dependency>
-
-
 
     </dependencies>
 
