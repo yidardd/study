@@ -51,6 +51,7 @@
         <module>thread</module>
         <module>swagger-generate</module>
         <module>nettydemo</module>
+        <module>leetcode</module>
     </modules>
 
     <dependencies>
