@@ -30,7 +30,7 @@
         <lombok.version>1.18.4</lombok.version>
         <hutool.version>4.4.2</hutool.version>
         <guava-version>27.0-jre</guava-version>
-        <jedis-version>2.9.0</jedis-version>
+        <jedis-version>2.9.1</jedis-version>
     </properties>
 
     <dependencyManagement>
