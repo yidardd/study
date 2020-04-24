@@ -52,6 +52,7 @@
         <module>swagger-generate</module>
         <module>nettydemo</module>
         <module>leetcode</module>
+        <module>vertx</module>
     </modules>
 
     <dependencies>
