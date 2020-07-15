@@ -23,7 +23,7 @@ import org.springframework.scripting.support.ResourceScriptSource;
 import com.study.listener.RddMessageListener;
 import com.study.listener.RedisMessageListener;
 
-@Configuration
+//@Configuration
 public class RedisServiceConfig {
 
   @Value("${redis.task.host}")

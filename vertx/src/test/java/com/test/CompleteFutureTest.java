@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
 
 /**
  * @author <a href="mailto:15268179013@139.com">yida</a>
@@ -42,6 +40,34 @@ public class CompleteFutureTest {
 //    System.out.println(integer);
 
   }
+
+  @Test
+  public void testEx() {
+    CompletableFuture<Integer> objectCompletableFuture = CompletableFuture.supplyAsync(() -> {
+          System.out.println("正在疯狂计算...");
+          try {
+            TimeUnit.SECONDS.sleep(3);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+          return 1 / 0;
+        }
+    );
+    System.out.println("阻塞获取结果...");
+    try {
+      Integer integer = objectCompletableFuture.get();
+      System.out.println(integer);
+    } catch (Exception e) {
+      System.out.println(1);
+      e.printStackTrace();
+    }
+
+//    System.out.println("阻塞获取结果...");
+//    Integer integer = objectCompletableFuture.getNow(222);
+//    System.out.println(integer);
+
+  }
+
 
   @Test
   public void test1(TestContext testContext) throws Exception {
@@ -125,7 +151,7 @@ public class CompleteFutureTest {
 //      return "f2";
     });
 
-    CompletableFuture<Void> all = CompletableFuture.allOf(f1, f2).handle((x,y) -> {
+    CompletableFuture<Void> all = CompletableFuture.allOf(f1, f2).handle((x, y) -> {
       System.out.println("all");
       return null;
     });
@@ -163,7 +189,8 @@ public class CompleteFutureTest {
     CompletableFuture<Object> anyof = CompletableFuture.anyOf(f1, f2).handle((x, y) -> {
       System.out.println(x);
       return x;
-    });;
+    });
+    ;
 
     //阻塞，直到所有任务结束。任务complete就会执行,handler里面不一定会执行..
     anyof.get();

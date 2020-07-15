@@ -12,7 +12,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 /**
  * Created by 东东 on 2018/11/18.
  */
-@Configuration
+//@Configuration
 public class RedisMqConfig {
 
     /**

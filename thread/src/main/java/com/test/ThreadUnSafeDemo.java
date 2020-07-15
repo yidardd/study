@@ -2,6 +2,7 @@ package com.test;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author <a href="mailto:15268179013@139.com">yida</a>
@@ -11,9 +12,8 @@ import java.util.concurrent.CountDownLatch;
  */
 public class ThreadUnSafeDemo {
 
-  //    private AtomicInteger value = new AtomicInteger(1);
+//      private static AtomicInteger value = new AtomicInteger(1);
   private static int value = 1;
-//  private static volatile int value = 1;
 
   public static void main(String[] args) throws InterruptedException {
 

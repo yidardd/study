@@ -10,7 +10,7 @@ public class HashFunctionImpl implements HashFunction {
      * MurMurHash算法，是非加密HASH算法，性能很高，碰撞率低 
      */  
     @Override  
-    public Long hash(String key) {  
+    public Long hash(String key) {
         ByteBuffer buf = ByteBuffer.wrap(key.getBytes());  
         int seed = 0x1234ABCD;  
   
