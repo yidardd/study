@@ -2,19 +2,19 @@ package com.test;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-import io.vertx.core.Future;
-import io.vertx.core.Vertx;
-import io.vertx.core.file.FileSystem;
-import io.vertx.ext.unit.Async;
-import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.test.core.TestVerticle;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import io.vertx.core.Future;
+import io.vertx.core.Vertx;
+import io.vertx.core.file.FileSystem;
+import io.vertx.core.http.HttpClient;
+import io.vertx.core.http.HttpClientRequest;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.test.core.TestVerticle;
 
 /**
  * @author <a href="mailto:15268179013@139.com">yida</a>
@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
  * @Description VertxTest
  */
 @RunWith(VertxUnitRunner.class)
-public class VertxTest {
+public class VertxFutureTest {
 
   private Vertx vertx;
   private FileSystem fs;
@@ -207,19 +207,19 @@ public class VertxTest {
     Future<String> f1 = Future.future();
     f1.complete("f1's result");
     f1.compose(r -> {
-      System.out.println("f1  hander :"+r);
+      System.out.println("f1  hander :" + r);
       Future<String> f2 = Future.future();
       f2.complete("f2's result");
       //返回的f2,下一个componse的执行者
       return f2;
     }).compose(r -> {
-      System.out.println("f2  hander :"+r);
+      System.out.println("f2  hander :" + r);
       Future<String> f3 = Future.future();
       f3.complete("f3's result");
       //返回的f3,setHandler
       return f3;
     }).setHandler(r -> {
-      System.out.println("f3  hander :"+r);
+      System.out.println("f3  hander :" + r);
     });
 
   }
@@ -240,6 +240,21 @@ public class VertxTest {
       System.out.println("The result is: " + res.result());
       async.complete();
     });
+
+  }
+
+  @Test
+  public void testHttpClient(TestContext context) {
+    Async async = context.async();
+
+    HttpClient client = vertx.createHttpClient();
+    HttpClientRequest httpClientRequest = client.get(9090,"localhost ","/hello2?name=13", response -> {
+      System.out.println(response.bodyHandler(x -> {
+        System.out.println(x);
+        async.complete();
+      }));
+    });
+
 
   }
 
