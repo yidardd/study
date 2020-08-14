@@ -1,4 +1,4 @@
-package com.test.thread;
+package com.test;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
