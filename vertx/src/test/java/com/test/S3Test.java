@@ -14,11 +14,13 @@ import io.vertx.core.Vertx;
  */
 public class S3Test {
 
-
+  jedisPoolConfig
     public static void main(String[] args) {
         final S3ClientOptions clientOptions = new S3ClientOptions()
                 .setAwsRegion("localhost")
-                .setHostnameOverride("10.129.40.2:9000")
+//                .setHostnameOverride("10.129.40.2:9000")
+            .setDefaultHost("10.129.40.2")
+            .setDefaultPort(9000)
                 .setAwsServiceName("s3")
                 .setAwsAccessKey("9z3e2PjovUT2ts54")
                 .setAwsSecretKey("g8knLrURFttmbuI1VsJG43x3yCKveW");

@@ -131,6 +131,29 @@ public class CompleteFutureTest {
   }
 
   @Test
+  public void testExp() throws Exception {
+    CompletableFuture<String> f1 = CompletableFuture.supplyAsync(() -> {
+      try {
+        TimeUnit.SECONDS.sleep(3);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      throw new RuntimeException("测试异常");
+    });
+
+    f1.whenComplete((x, y) -> {
+      System.out.println("whenComplete" + y.getMessage());
+    });
+
+    f1.exceptionally(t -> {
+      System.out.println("exceptionally" + t.getMessage());
+      return null;
+    });
+    System.out.println("end...");
+    TimeUnit.SECONDS.sleep(3);
+  }
+
+  @Test
   public void allOfTest1() throws Exception {
     CompletableFuture<String> f1 = CompletableFuture.supplyAsync(() -> {
       try {
